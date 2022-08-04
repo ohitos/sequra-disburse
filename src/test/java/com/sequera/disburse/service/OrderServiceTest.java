@@ -23,8 +23,9 @@ import static org.springframework.test.util.AssertionErrors.assertEquals;
 import static org.springframework.test.util.AssertionErrors.assertTrue;
 
 @ExtendWith(MockitoExtension.class)
-class OrderServiceTest {
+public class OrderServiceTest {
 
+    private static final String MERCHANT_ID = "id";
     @InjectMocks
     private OrderService service;
     @Mock
@@ -44,6 +45,39 @@ class OrderServiceTest {
         service.insert(entity);
 
         verify(repository, times(1)).insert(entity);
+    }
+
+    @Test
+    void mark_as_completed_when_entity_is_null() {
+        service.markAsCompleted(null);
+
+        verify(repository, never()).put(any());
+    }
+
+    @Test
+    void mark_as_completed() {
+        List<Order> entityList = new ArrayList<>();
+        Order order = new Order();
+        entityList.add(order);
+
+        service.markAsCompleted(entityList);
+
+        verify(repository, times(1)).put(order);
+    }
+
+    @Test
+    void get_non_completed() {
+        List<Order> entityList = new ArrayList<>();
+        entityList.add(new Order());
+
+        when(repository.getAllNotCompleted()).thenReturn(entityList);
+
+        List<Order> result = service.getNotCompleted();
+
+        assertTrue("Result should not be empty", ObjectUtils.isNotEmpty(result));
+        assertEquals("Result should be equals", entityList, result);
+
+        verify(repository, times(1)).getAllNotCompleted();
     }
 
     @Test
@@ -83,14 +117,14 @@ class OrderServiceTest {
         List<Order> entityList = new ArrayList<>();
         entityList.add(new Order());
 
-        when(repository.get("id")).thenReturn(entityList);
+        when(repository.get(MERCHANT_ID)).thenReturn(entityList);
 
-        List<Order> result = service.get("id");
+        List<Order> result = service.get(MERCHANT_ID);
 
         assertTrue("Result should not be empty", ObjectUtils.isNotEmpty(result));
         assertEquals("Result should be equals", entityList, result);
 
         verify(repository, never()).getAll();
-        verify(repository, times(1)).get("id");
+        verify(repository, times(1)).get(MERCHANT_ID);
     }
 }

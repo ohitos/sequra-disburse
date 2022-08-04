@@ -10,6 +10,9 @@ import com.sequera.disburse.data.Order;
 public interface OrderRepository {
 
     void insert(Order entity);
+    void put(Order entity);
     List<Order> get(String merchantId);
     List<Order> getAll();
+
+    List<Order> getAllNotCompleted();
 }
