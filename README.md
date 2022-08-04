@@ -21,5 +21,14 @@ mvn clean install
 At this point you could run locally your service with:
 
 ```
-java -jar target/default-unnamed-service-0.1.0-SNAPSHOT.jar
+java -jar target/disburse-0.0.1-SNAPSHOT.jar
+./mvnw spring-boot:run
 ```
+
+### Solution ###
+I choose a Repository-Service pattern in this case. 
+
+The controllers will expose the endpoint to work with.
+In the service the logic is placed.
+The repositories are interface whose will interact with the DB struture.
+Each entity-repository has his own service-repository to abstract the logic about them into separated classes.
