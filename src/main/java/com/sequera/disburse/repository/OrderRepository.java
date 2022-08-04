@@ -1,0 +1,15 @@
+package com.sequera.disburse.repository;
+
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+import com.sequera.disburse.data.Order;
+
+@Repository
+public interface OrderRepository {
+
+    void insert(Order entity);
+    List<Order> get(String merchantId);
+    List<Order> getAll();
+}
